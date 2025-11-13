@@ -72,8 +72,5 @@ CREATE TABLE bookings (
     status VARCHAR(50) DEFAULT 'confirmed'
 );
 
--- A little message to let us know it worked!
--- ... (all your CREATE TABLE code above) ...
-
--- A little message to let us know it worked!
+-- A little message to let us know it worked (as a comment)
 -- Database tables created successfully!
