@@ -1,24 +1,27 @@
 import React from "react";
-// 1. Router ke tools import karo
 import { Routes, Route } from "react-router-dom";
 
-// 2. Apne saare pages yahaan import karo
-import Home from "../pages/Home";
-import PlaceDetailPage from "../pages/PlaceDetailPage";
-// (Baad mein hum aur pages yahaan add karenge)
-// import PlaceDetailPage from '../pages/PlaceDetailPage';
-// import LoginPage from '../pages/LoginPage';
+// 1. Apne saare pages ko import karo
+import Home from "../pages/Home.jsx"; // Aapki Home.jsx file
+import PlaceDetailPage from "../pages/PlaceDetailPage.jsx";
+import RegisterPage from "../pages/RegisterPage.jsx";
+import LoginPage from "../pages/LoginPage.jsx"; // <-- Naya page import
 
 const AppRoutes = () => {
   return (
-    // 3. Yahaan hum apne saare URL rules define karenge
+    // 2. 'Routes' component URLs ko manage karta hai
     <Routes>
+      {/* Jab URL '/' ho, toh 'Home' component dikhao */}
       <Route path="/" element={<Home />} />
+
+      {/* Jab URL '/places/1' (ya /places/2, etc.) ho, toh 'PlaceDetailPage' dikhao */}
       <Route path="/places/:id" element={<PlaceDetailPage />} />
 
-      {/* <Route path="/places/:id" element={<PlaceDetailPage />} />
-        <Route path="/login" element={<LoginPage />} /> 
-      */}
+      {/* Jab URL '/register' ho, toh 'RegisterPage' dikhao */}
+      <Route path="/register" element={<RegisterPage />} />
+
+      {/* Jab URL '/login' ho, toh 'LoginPage' dikhao */}
+      <Route path="/login" element={<LoginPage />} />
     </Routes>
   );
 };

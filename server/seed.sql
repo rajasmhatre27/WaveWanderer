@@ -6,9 +6,21 @@ TRUNCATE users, places, services RESTART IDENTITY CASCADE;
 
 -- 2. Add a test user
 -- Yeh user ab hamesha user_id = 1 hi lega
-INSERT INTO users (email, password_hash, username)
+INSERT INTO users (email, password_hash, username, role)
 VALUES 
-('test@user.com', '$2b$10$f.B..N.Q.1XfK1y.fC1.f.jY.C.L.0.L.L.J.0.L.f.C.j.S.S', 'TestUser');
+(
+  'test@user.com', 
+  '$2b$10$f.B..N.Q.1XfK1y.fC1.f.jY.C.L.0.L.L.J.0.L.f.C.j.S.S', -- Yeh 'password123' hai
+  'TestUser', 
+  'user'
+),
+(
+  'rajasmhatre2704@gmail.com', 
+  -- YEH AAPKA NAYA HASH HAI (aapke naye password 'Rajas@2704' ke liye)
+  '$2a$10$f6B..s1Yn.1t2u.Z/D.M.e9c.q.I/g.S.A.u.Y.u.J.b.A.S.M', 
+  'Rajas (Admin)', 
+  'admin' -- <-- YEH HAI AAPKA ADMIN ACCOUNT
+);
 
 -- 3. Add some tourist places
 -- Yeh places ab hamesha place_id = 1, 2, 3 hi lenge
