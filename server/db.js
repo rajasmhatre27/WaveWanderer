@@ -1,26 +1,57 @@
-// 1. 'pg' (node-postgres) library ko import karo
-import pg from "pg";
+import pkg from "pg";
+import dotenv from "dotenv";
+// Load environment variables immediately
+dotenv.config();
 
-// 2. 'dotenv' ko import karo taaki hum .env file se password padh sakein
-//    'dotenv/config' likhne se .env file ka data automatically load ho jaata hai
-import "dotenv/config";
+const { Pool } = pkg;
 
-// 3. Hum 'pg' library se 'Pool' class ko nikaal rahe hain
-const { Pool } = pg;
-
-// 4. YEH HAI SABSE IMPORTANT LINE: Hum pool ko define kar rahe hain
-//    Hum 'Pool' class ka ek naya object bana rahe hain
+// Pool configuration using the separate environment variables
 const pool = new Pool({
-  // Yeh hamare .env file se database ka URL padhta hai
-  connectionString: process.env.DATABASE_URL,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 
-  // Yeh line Supabase (jo AWS par chalta hai) ke liye zaroori hai
-  // Yeh kehta hai ki SSL connection ko allow karo
+  // FINAL SSL FIX: Explicitly requiring SSL and rejecting local authorization
+  // This is the robust setting needed for cloud providers like Supabase.
   ssl: {
     rejectUnauthorized: false,
   },
+
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
-// 5. Is 'pool' ko export karo taaki hamari doosri files (jaise run-seed.js)
-//    isey import karke istemaal kar sakein.
+// IMPORTANT: Keep the error handler
+pool.on("error", (err, client) => {
+  // Log the error but DO NOT throw or crash the process.
+  console.error(
+    "FATAL DB ERROR: Unexpected termination on idle client in pool:",
+    err.stack
+  );
+});
+
+// --- NEW RESILIENCE CHECK ---
+// Test the connection immediately to wake up the pooler and check for errors.
+pool
+  .query("SELECT 1")
+  .then(() => {
+    console.log(`✅ Database connection successfully tested.`);
+    console.log(
+      `✅ Database Pool initialized. Host: ${process.env.DB_HOST} (SSL enforced)`
+    );
+  })
+  .catch((err) => {
+    // If this fails, the error is critical and likely password/permission related.
+    console.error(
+      "❌ CRITICAL: Initial database connection failed.",
+      err.message
+    );
+    console.error(
+      "Please check your DB_USER, DB_PASSWORD, and ensure the pooler role has access to your tables."
+    );
+  });
+
 export default pool;

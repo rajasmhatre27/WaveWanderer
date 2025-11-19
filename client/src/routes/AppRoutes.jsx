@@ -6,6 +6,7 @@ import Home from "../pages/Home.jsx"; // Aapki Home.jsx file
 import PlaceDetailPage from "../pages/PlaceDetailPage.jsx";
 import RegisterPage from "../pages/RegisterPage.jsx";
 import LoginPage from "../pages/LoginPage.jsx"; // <-- Naya page import
+import AdminPage from "../pages/AdminPage.jsx";
 
 const AppRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const AppRoutes = () => {
 
       {/* Jab URL '/login' ho, toh 'LoginPage' dikhao */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/admin" element={<AdminPage />} />
     </Routes>
   );
 };

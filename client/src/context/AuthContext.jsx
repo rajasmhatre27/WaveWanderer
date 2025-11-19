@@ -1,46 +1,71 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // Hum isey install karenge
+import { jwtDecode } from "jwt-decode";
 
-// 1. Naya "Context" (Global Memory) banana
 const AuthContext = createContext(null);
 
-// 2. "Provider" banana - Yeh component poore app ko "memory" provide karega
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [user, setUser] = useState(null); // User ki details (id aur role)
+  // 1. Shuruat mein hi localStorage check karo (Lazy Initialization)
+  //    Isse page refresh hone par bhi state bani rehti hai.
+  const [token, setToken] = useState(() => localStorage.getItem("token"));
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Loading state zaroori hai
 
-  // 3. Jab app pehli baar load ho, toh check karo ki token pehle se hai ya nahi
   useEffect(() => {
-    try {
+    // 2. Jab bhi app load ho (ya token change ho), user ko decode karo
+    const initializeAuth = () => {
       const storedToken = localStorage.getItem("token");
+
       if (storedToken) {
-        setToken(storedToken);
-        const decodedUser = jwtDecode(storedToken); // Token ko "kholo"
-        setUser(decodedUser); // User state ko set karo (ab user.id aur user.role available hai)
+        try {
+          const decodedUser = jwtDecode(storedToken);
+
+          // Optional: Check karo ki token expire toh nahi ho gaya
+          const currentTime = Date.now() / 1000;
+          if (decodedUser.exp < currentTime) {
+            console.log("Token expired");
+            logout();
+          } else {
+            setToken(storedToken);
+            setUser(decodedUser);
+          }
+        } catch (error) {
+          console.error("Invalid token found in storage", error);
+          logout();
+        }
+      } else {
+        setToken(null);
+        setUser(null);
       }
-    } catch (error) {
-      // Token galat ya expire ho gaya toh
-      console.error("Invalid token:", error);
-      localStorage.removeItem("token");
-    }
+      setLoading(false); // Auth check complete
+    };
+
+    initializeAuth();
   }, []);
 
-  // 4. "Login" function - Yeh function hamara LoginPage aur RegisterPage call karega
   const login = (newToken) => {
-    localStorage.setItem("token", newToken); // Token ko browser ki memory (localStorage) mein save karo
-    setToken(newToken); // State mein save karo
-    const decodedUser = jwtDecode(newToken); // Naye token ko "kholo"
-    setUser(decodedUser); // User state ko set karo
+    localStorage.setItem("token", newToken);
+    setToken(newToken);
+
+    try {
+      const decodedUser = jwtDecode(newToken);
+      setUser(decodedUser);
+    } catch (error) {
+      console.error("Error decoding token on login", error);
+    }
   };
 
-  // 5. "Logout" function
   const logout = () => {
-    localStorage.removeItem("token"); // localStorage se token hatao
+    localStorage.removeItem("token");
     setToken(null);
     setUser(null);
   };
 
-  // 6. Poore app ko yeh values provide karo
+  // 3. Jab tak hum check kar rahe hain ki user logged in hai ya nahi,
+  //    tab tak kuch mat dikhao (ya spinner dikhao) taaki "flash" na ho.
+  if (loading) {
+    return null; // Ya ek <Spinner />
+  }
+
   return (
     <AuthContext.Provider value={{ token, user, login, logout }}>
       {children}
@@ -48,7 +73,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// 7. Ek "custom hook" - Isse humein har component mein data access karna aasan ho jaayega
 export const useAuth = () => {
   return useContext(AuthContext);
 };
