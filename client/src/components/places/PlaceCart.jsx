@@ -19,7 +19,7 @@ const PlaceCart = ({ place }) => {
         </div>
       </Link>
 
-      <div className="p-5 flex flex-col flex-grow">
+      <div className="p-5 flex flex-col ">
         <div className="flex justify-between items-start mb-2">
           <h3 className="font-bold text-xl text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-1">
             {place.name}
@@ -31,7 +31,7 @@ const PlaceCart = ({ place }) => {
           <span className="line-clamp-1">{place.location}</span>
         </div>
 
-        <p className="text-gray-600 text-sm line-clamp-2 mb-4 flex-grow">
+        <p className="text-gray-600 text-sm line-clamp-2 mb-4">
           {place.description}
         </p>
 

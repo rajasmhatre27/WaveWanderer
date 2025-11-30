@@ -2,7 +2,7 @@ import React from "react";
 // 1. Apni nayi Routes file ko import karo
 import AppRoutes from "./routes/AppRoutes";
 import Navbar from "./components/Navbar";
-
+import Footer from "./components/Footer";
 // (Hum agle step mein Navbar aur Footer banakar yahaan import karenge)
 // import Navbar from './components/common/Navbar';
 // import Footer from './components/common/Footer';
@@ -17,7 +17,7 @@ const App = () => {
         <AppRoutes /> {/* <-- Saara URL logic ab yeh file sambhalegi */}
       </main>
 
-      {/* <Footer />  <-- Yahaan hamara Footer aayega (har page par dikhega) */}
+      <Footer />
     </div>
   );
 };
