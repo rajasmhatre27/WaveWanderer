@@ -9,6 +9,7 @@ import pool from "./db.js"; // <-- Yahaan './' zaroori hai
 import placeRoutes from "./routes/places.js";
 import authRoutes from "./routes/authRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import weatherRoutes from "./routes/weather.js";
 
 // 2. Create an instance of the express app
 const app = express();
@@ -22,6 +23,8 @@ app.use(express.json()); // Lets our server understand JSON data
 app.use("/api/places", placeRoutes);
 app.use("/api/auth", authRoutes); // Path '/api/auth' hai
 app.use("/api/upload", uploadRoutes);
+app.use("/api/weather", weatherRoutes);
+
 // 5. Server ko Chalu Karo
 app.listen(PORT, () => {
   console.log(`Server is running on Port ${PORT}`);

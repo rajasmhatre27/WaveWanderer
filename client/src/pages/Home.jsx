@@ -2,7 +2,23 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PlaceCart from "../components/places/PlaceCart";
 import { Link } from "react-router-dom";
-import { MapPin, Utensils, Car, Search } from "lucide-react"; // Importing icons (we will install this library)
+import {
+  MapPin,
+  Utensils,
+  Car,
+  Search,
+  Clock,
+  Compass,
+  PartyPopper,
+  Bike,
+  BookOpen,
+  Waves,
+  Castle,
+  TreePine,
+  Landmark,
+  Sparkles,
+} from "lucide-react";
+import WeatherWidget from "../components/WeatherWidget";
 
 const Home = () => {
   const [places, setPlaces] = useState([]);
@@ -22,6 +38,35 @@ const Home = () => {
     fetchPlaces();
   }, []);
 
+  // Get unique categories from places
+  const categories = [...new Set(places.map((place) => place.type))];
+
+  // Count places per category
+  const categoryCounts = categories.map((category) => ({
+    name: category,
+    count: places.filter((place) => place.type === category).length,
+  }));
+
+  // Icon mapping for categories
+  const categoryIcons = {
+    beach: Waves,
+    fort: Castle,
+    restaurant: Utensils,
+    temple: Landmark,
+    park: TreePine,
+    historical: Landmark,
+    // Add more mappings as needed
+  };
+
+  const getCategoryIcon = (category) => {
+    const IconComponent = categoryIcons[category] || Sparkles;
+    return <IconComponent size={24} />;
+  };
+
+  const formatCategoryName = (category) => {
+    return category.charAt(0).toUpperCase() + category.slice(1);
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-blue-50">
@@ -34,16 +79,13 @@ const Home = () => {
     <div className="bg-gray-50 min-h-screen">
       {/* --- 1. HERO SECTION --- */}
       <div className="relative h-[500px] w-full">
-        {/* Background Image */}
         <img
           src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
           alt="Alibag Beach"
           className="w-full h-full object-cover"
         />
-        {/* Overlay Gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent"></div>
 
-        {/* Content */}
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-4">
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-4 drop-shadow-lg">
             Discover <span className="text-blue-400">Alibag</span>
@@ -52,19 +94,64 @@ const Home = () => {
             Your ultimate local guide to hidden beaches, authentic food, and
             stress-free travel.
           </p>
+          <div className="flex gap-4">
+            <Link
+              to="/map"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 flex items-center gap-2"
+            >
+              <MapPin size={20} /> View Map
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* --- 2. NEW: TRIP PLANNER DASHBOARD --- */}
+      <div className="container mx-auto px-6 relative z-10 -mt-16 mb-12">
+        <div className="bg-white rounded-2xl shadow-2xl border-l-8 border-blue-600 p-8 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex-1 text-left">
+            <div className="flex items-center text-blue-600 mb-2">
+              <Clock className="w-6 h-6 mr-2" />
+              <span className="font-bold uppercase tracking-wider text-sm">
+                Smart Itinerary
+              </span>
+            </div>
+            <h2 className="text-3xl font-extrabold text-gray-800 mb-3">
+              "I have 5 hours, what should I do?"
+            </h2>
+            <p className="text-gray-600 text-lg mb-6">
+              Don't waste time planning. Choose your vibe, and we'll build a
+              perfect schedule for you instantly. Add spots to your{" "}
+              <strong>Trip Cart</strong> and go!
+            </p>
+
+            {/* Vibe Previews */}
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center bg-pink-50 text-pink-700 px-4 py-2 rounded-full font-medium border border-pink-100">
+                <PartyPopper size={18} className="mr-2" /> Family Fun
+              </div>
+              <div className="flex items-center bg-green-50 text-green-700 px-4 py-2 rounded-full font-medium border border-green-100">
+                <Bike size={18} className="mr-2" /> Adventure
+              </div>
+              <div className="flex items-center bg-purple-50 text-purple-700 px-4 py-2 rounded-full font-medium border border-purple-100">
+                <BookOpen size={18} className="mr-2" /> Relaxing
+              </div>
+            </div>
+          </div>
+
+          {/* Call to Action Button */}
           <Link
-            to="/map"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 flex items-center gap-2"
+            to="/trip-planner"
+            className="flex-shrink-0 bg-gray-900 text-white text-lg font-bold py-4 px-8 rounded-xl shadow-lg hover:bg-gray-800 hover:shadow-xl transition transform hover:-translate-y-1 flex items-center"
           >
-            <MapPin size={20} /> Start Exploring
+            <Compass size={24} className="mr-3" />
+            Open Trip Planner
           </Link>
         </div>
       </div>
 
-      {/* --- 2. FEATURES SECTION --- */}
-      <div className="container mx-auto px-6 -mt-20 relative z-10">
+      {/* --- 3. FEATURES SECTION --- */}
+      <div className="container mx-auto px-6 mb-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Card 1: Transport */}
           <div className="bg-white p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-300 border-t-4 border-yellow-500">
             <div className="bg-yellow-100 w-14 h-14 rounded-full flex items-center justify-center mb-4 text-yellow-600">
               <Car size={28} />
@@ -72,13 +159,12 @@ const Home = () => {
             <h3 className="text-xl font-bold text-gray-800 mb-2">
               Transport Solver
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600">
               No more scams. Find fair auto fares and trusted scooter rentals
               instantly.
             </p>
           </div>
 
-          {/* Card 2: Food */}
           <div className="bg-white p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-300 border-t-4 border-red-500">
             <div className="bg-red-100 w-14 h-14 rounded-full flex items-center justify-center mb-4 text-red-600">
               <Utensils size={28} />
@@ -86,13 +172,12 @@ const Home = () => {
             <h3 className="text-xl font-bold text-gray-800 mb-2">
               Authentic Food
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600">
               Skip the tourist traps. Discover the best local Agari & Konkani
               seafood spots.
             </p>
           </div>
 
-          {/* Card 3: Hidden Gems */}
           <div className="bg-white p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-300 border-t-4 border-green-500">
             <div className="bg-green-100 w-14 h-14 rounded-full flex items-center justify-center mb-4 text-green-600">
               <Search size={28} />
@@ -100,61 +185,68 @@ const Home = () => {
             <h3 className="text-xl font-bold text-gray-800 mb-2">
               Hidden Gems
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600">
               Find secret beaches and ancient forts that aren't on the usual
               maps.
             </p>
           </div>
         </div>
       </div>
+      <WeatherWidget />
 
-      {/* --- 3. POPULAR PLACES GRID --- */}
-      <div className="container mx-auto px-6 py-16">
+      {/* --- 4. NEW: CATEGORIES SECTION --- */}
+      <div className="container mx-auto px-6 pb-16">
         <div className="flex justify-between items-end mb-8">
           <div>
             <h2 className="text-3xl font-bold text-gray-800">
-              Popular Destinations
+              Explore Categories
             </h2>
             <p className="text-gray-500 mt-2">
-              Top-rated spots loved by travelers and locals.
+              Discover Alibag through different types of experiences
             </p>
           </div>
           <Link
-            to="/map"
+            to="/places"
             className="text-blue-600 font-semibold hover:underline hidden md:block"
           >
-            View on Map →
+            View All Places →
           </Link>
         </div>
 
-        {places.length === 0 ? (
+        {categories.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-lg shadow-sm">
-            <p className="text-xl text-gray-400">No places found yet.</p>
+            <p className="text-xl text-gray-400">No categories found yet.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {places.map((place) => (
-              <PlaceCart key={place.place_id} place={place} />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            {categoryCounts.map((category) => (
+              <Link
+                key={category.name}
+                to={`/places?category=${category.name}`}
+                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 p-6 text-center group"
+              >
+                <div className="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-100 transition-colors duration-300 text-blue-600">
+                  {getCategoryIcon(category.name)}
+                </div>
+                <h3 className="font-bold text-gray-800 mb-1 group-hover:text-blue-600 transition-colors duration-300">
+                  {formatCategoryName(category.name)}
+                </h3>
+                <p className="text-sm text-gray-500">
+                  {category.count} {category.count === 1 ? "place" : "places"}
+                </p>
+              </Link>
             ))}
           </div>
         )}
-      </div>
 
-      {/* --- 4. CALL TO ACTION BANNER --- */}
-      <div className="bg-blue-900 text-white py-16">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            Ready to experience the real Alibag?
-          </h2>
-          <p className="text-blue-200 mb-8 max-w-2xl mx-auto">
-            Join our community to save your favorite spots, write reviews, and
-            get exclusive local tips.
-          </p>
+        {/* Mobile View All Link */}
+        <div className="text-center mt-8 md:hidden">
           <Link
-            to="/register"
-            className="bg-white text-blue-900 font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition"
+            to="/places"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg inline-flex items-center gap-2"
           >
-            Join Now - It's Free
+            View All Places
+            <MapPin size={18} />
           </Link>
         </div>
       </div>
