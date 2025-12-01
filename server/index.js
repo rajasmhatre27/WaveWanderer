@@ -13,10 +13,18 @@ import weatherRoutes from "./routes/weather.js";
 
 // 2. Create an instance of the express app
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 
 // 3. Add middleware
-app.use(cors()); // Lets our React app talk to our server
+// Update this line to include specific origins
+app.use(cors({
+  origin: [
+    'https://wavewander.vercel.app',  // Your future Vercel frontend
+    'http://localhost:5173',          // Local development
+    'https://wavewander-backend.onrender.com'  // Your Render backend
+  ],
+  credentials: true
+})); // Lets our React app talk to our server // Lets our React app talk to our server
 app.use(express.json()); // Lets our server understand JSON data
 
 // 4. API Routes (Manager ko department dena)
