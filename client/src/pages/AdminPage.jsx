@@ -55,7 +55,7 @@ const AdminPage = () => {
 
         console.log("Uploading image...");
         const uploadResponse = await axios.post(
-          "http://localhost:5000/api/upload",
+          "https://wavewander-backend.onrender.com/api/upload",
           imageData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -65,7 +65,7 @@ const AdminPage = () => {
       // Step 2: Place ka data save karo
       const placeData = { ...formData, image_url: finalImageUrl };
 
-      await axios.post("http://localhost:5000/api/places", placeData, {
+      await axios.post("https://wavewander-backend.onrender.com/api/places", placeData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

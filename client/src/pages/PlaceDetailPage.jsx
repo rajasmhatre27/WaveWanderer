@@ -38,7 +38,7 @@ const PlaceDetailPage = () => {
     const fetchPlaceDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/places/${placeId}`
+          `https://wavewander-backend.onrender.com/places/${placeId}`
         );
         setPlace(response.data);
       } catch (error) {
@@ -62,7 +62,7 @@ const PlaceDetailPage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/reviews",
+        "https://wavewander-backend.onrender.com/api/reviews",
         {
           place_id: placeId,
           rating: parseInt(newReview.rating),

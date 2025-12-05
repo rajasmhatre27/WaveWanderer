@@ -9,7 +9,7 @@ const WeatherWidget = () => {
   const fetchWeather = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:5000/api/weather");
+      const response = await axios.get("https://wavewander-backend.onrender.com/api/weather");
       setWeather(response.data);
     } catch (error) {
       console.error("Failed to fetch weather:", error);

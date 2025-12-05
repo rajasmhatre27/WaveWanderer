@@ -27,7 +27,7 @@ const Home = () => {
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/places");
+        const response = await axios.get("https://wavewander-backend.onrender.com/places");
         setPlaces(response.data);
       } catch (error) {
         console.error("Error fetching places:", error);

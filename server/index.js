@@ -17,14 +17,17 @@ const PORT = process.env.PORT || 10000;
 
 // 3. Add middleware
 // Update this line to include specific origins
-app.use(cors({
-  origin: [
-    'https://wavewander.vercel.app',  // Your future Vercel frontend
-    'http://localhost:5173',          // Local development
-    'https://wavewander-backend.onrender.com'  // Your Render backend
-  ],
-  credentials: true
-})); // Lets our React app talk to our server // Lets our React app talk to our server
+app.use(
+  cors({
+    origin: [
+      "https://wavewander.vercel.app", // Your future Vercel frontend
+      "http://localhost:5173",
+      "http://localhost:3000", // Local development
+      "https://wavewander-backend.onrender.com", // Your Render backend
+    ],
+    credentials: true,
+  })
+); // Lets our React app talk to our server // Lets our React app talk to our server
 app.use(express.json()); // Lets our server understand JSON data
 
 // 4. API Routes (Manager ko department dena)

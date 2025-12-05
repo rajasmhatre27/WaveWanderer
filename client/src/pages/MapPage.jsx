@@ -29,7 +29,7 @@ const MapPage = () => {
     const fetchPlaces = async () => {
       try {
         // Calling our Express API
-        const response = await axios.get("http://localhost:5000/api/places");
+        const response = await axios.get("https://wavewander-backend.onrender.com/api/places");
 
         // Filter out places that don't have valid coordinates (to prevent map errors)
         const validPlaces = response.data.filter(
