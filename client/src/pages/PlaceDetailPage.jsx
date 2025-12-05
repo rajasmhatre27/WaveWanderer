@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"; // Map components
 import "leaflet/dist/leaflet.css"; // CSS import
 import L from "leaflet";
-
+import apiUrl from "../apiConfig";
 // --- Leaflet Icon Fix ---
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
@@ -37,9 +37,7 @@ const PlaceDetailPage = () => {
   useEffect(() => {
     const fetchPlaceDetails = async () => {
       try {
-        const response = await axios.get(
-          `https://wavewander-backend.onrender.com/places/${placeId}`
-        );
+        const response = await axios.get(`${apiUrl}/api/places/${placeId}`);
         setPlace(response.data);
       } catch (error) {
         console.error("Error fetching place details:", error.message);
@@ -62,7 +60,7 @@ const PlaceDetailPage = () => {
 
     try {
       const response = await axios.post(
-        "https://wavewander-backend.onrender.com/api/reviews",
+        `${apiUrl}/api/reviews`,
         {
           place_id: placeId,
           rating: parseInt(newReview.rating),

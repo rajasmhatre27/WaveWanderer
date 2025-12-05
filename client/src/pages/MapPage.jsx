@@ -3,7 +3,7 @@ import axios from "axios";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-
+import apiUrl from "../apiConfig";
 // --- Leaflet Icon Fix ---
 // This fixes the issue where default markers don't show up in React Leaflet
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -29,7 +29,7 @@ const MapPage = () => {
     const fetchPlaces = async () => {
       try {
         // Calling our Express API
-        const response = await axios.get("https://wavewander-backend.onrender.com/api/places");
+        const response = await axios.get(`${apiUrl}/api/places`);
 
         // Filter out places that don't have valid coordinates (to prevent map errors)
         const validPlaces = response.data.filter(

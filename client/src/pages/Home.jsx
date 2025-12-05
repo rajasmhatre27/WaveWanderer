@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PlaceCart from "../components/places/PlaceCart";
 import { Link } from "react-router-dom";
+import apiUrl from "../apiConfig";
 import {
   MapPin,
   Utensils,
@@ -27,7 +28,7 @@ const Home = () => {
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
-        const response = await axios.get("https://wavewander-backend.onrender.com/places");
+        const response = await axios.get(`${apiUrl}/api/places`);
         setPlaces(response.data);
       } catch (error) {
         console.error("Error fetching places:", error);

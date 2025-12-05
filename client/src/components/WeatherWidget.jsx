@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Sun, Cloud, CloudRain, RefreshCw } from "lucide-react";
-
+import apiUrl from "../apiConfig";
 const WeatherWidget = () => {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -9,7 +9,7 @@ const WeatherWidget = () => {
   const fetchWeather = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("https://wavewander-backend.onrender.com/api/weather");
+      const response = await axios.get(`${apiUrl}/api/weather`);
       setWeather(response.data);
     } catch (error) {
       console.error("Failed to fetch weather:", error);

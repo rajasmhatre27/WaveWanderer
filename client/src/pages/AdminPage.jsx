@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-
+import apiUrl from "../apiConfig";
 const AdminPage = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -55,7 +55,7 @@ const AdminPage = () => {
 
         console.log("Uploading image...");
         const uploadResponse = await axios.post(
-          "https://wavewander-backend.onrender.com/api/upload",
+          `${apiUrl}/api/upload`,
           imageData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -65,7 +65,7 @@ const AdminPage = () => {
       // Step 2: Place ka data save karo
       const placeData = { ...formData, image_url: finalImageUrl };
 
-      await axios.post("https://wavewander-backend.onrender.com/api/places", placeData, {
+      await axios.post(`${apiUrl}/api/places`, placeData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

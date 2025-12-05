@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"; // <-- NAYA IMPORT
-
+import apiUrl from "../apiConfig";
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -20,10 +20,7 @@ const LoginPage = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "https://wavewander-backend.onrender.com/api/auth/login",
-        formData
-      );
+      const response = await axios.post(`${apiUrl}/api/auth/login`, formData);
 
       // --- YEH LINE CHANGE HUI HAI ---
       // console.log('Login successful!', response.data.token); (Purana code)

@@ -15,7 +15,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useTrip } from "../context/TripContext";
-
+import apiUrl from "../apiConfig";
 // --- HELPER: Map DB Types to Planner Categories ---
 // Database mein 'type' alag hai, aur Planner mein 'category' alag hai.
 // Hum unhe yahaan connect kar rahe hain.
@@ -47,9 +47,7 @@ const TripPlannerPage = () => {
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
-        const response = await axios.get(
-          "https://wavewander-backend.onrender.com/api/places"
-        );
+        const response = await axios.get(`${apiUrl}/api/places`);
         setPlaces(response.data);
       } catch (error) {
         console.error("Error fetching places:", error);

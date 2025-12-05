@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"; // <-- NAYA IMPORT
-
+import apiUrl from "../apiConfig";
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -25,10 +25,10 @@ const RegisterPage = () => {
       return;
     }
     try {
-      const response = await axios.post(
-        "https://wavewander-backend.onrender.com/api/auth/register",
-        { email, password }
-      );
+      const response = await axios.post(`${apiUrl}/api/auth/register`, {
+        email,
+        password,
+      });
 
       // --- YEH LINE CHANGE HUI HAI ---
       // console.log('Registration successful!', response.data.token); (Purana code)
