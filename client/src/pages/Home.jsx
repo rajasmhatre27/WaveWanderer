@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PlaceCart from "../components/places/PlaceCart";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import apiUrl from "../apiConfig";
 import {
   MapPin,
@@ -18,12 +18,17 @@ import {
   TreePine,
   Landmark,
   Sparkles,
+  ShoppingBag,
+  ArrowRight,
+  Star,
+  Gift,
 } from "lucide-react";
 import WeatherWidget from "../components/WeatherWidget";
 
 const Home = () => {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPlaces = async () => {
@@ -39,16 +44,14 @@ const Home = () => {
     fetchPlaces();
   }, []);
 
-  // Get unique categories from places
+  // --- Helper Functions for Categories ---
   const categories = [...new Set(places.map((place) => place.type))];
 
-  // Count places per category
   const categoryCounts = categories.map((category) => ({
     name: category,
     count: places.filter((place) => place.type === category).length,
   }));
 
-  // Icon mapping for categories
   const categoryIcons = {
     beach: Waves,
     fort: Castle,
@@ -56,7 +59,6 @@ const Home = () => {
     temple: Landmark,
     park: TreePine,
     historical: Landmark,
-    // Add more mappings as needed
   };
 
   const getCategoryIcon = (category) => {
@@ -66,6 +68,10 @@ const Home = () => {
 
   const formatCategoryName = (category) => {
     return category.charAt(0).toUpperCase() + category.slice(1);
+  };
+
+  const handleCategoryClick = (category) => {
+    navigate(`/places?category=${category}`);
   };
 
   if (loading) {
@@ -106,7 +112,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* --- 2. NEW: TRIP PLANNER DASHBOARD --- */}
+      {/* --- 2. TRIP PLANNER DASHBOARD --- */}
       <div className="container mx-auto px-6 relative z-10 -mt-16 mb-12">
         <div className="bg-white rounded-2xl shadow-2xl border-l-8 border-blue-600 p-8 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex-1 text-left">
@@ -124,8 +130,6 @@ const Home = () => {
               perfect schedule for you instantly. Add spots to your{" "}
               <strong>Trip Cart</strong> and go!
             </p>
-
-            {/* Vibe Previews */}
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center bg-pink-50 text-pink-700 px-4 py-2 rounded-full font-medium border border-pink-100">
                 <PartyPopper size={18} className="mr-2" /> Family Fun
@@ -138,8 +142,6 @@ const Home = () => {
               </div>
             </div>
           </div>
-
-          {/* Call to Action Button */}
           <Link
             to="/trip-planner"
             className="flex-shrink-0 bg-gray-900 text-white text-lg font-bold py-4 px-8 rounded-xl shadow-lg hover:bg-gray-800 hover:shadow-xl transition transform hover:-translate-y-1 flex items-center"
@@ -150,7 +152,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* --- 3. FEATURES SECTION --- */}
+      {/* --- 3. FEATURES GRID --- */}
       <div className="container mx-auto px-6 mb-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-300 border-t-4 border-yellow-500">
@@ -193,14 +195,18 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <WeatherWidget />
 
-      {/* --- 4. NEW: CATEGORIES SECTION --- */}
-      <div className="container mx-auto px-6 pb-16">
+      {/* Weather Widget */}
+      <div className="container mx-auto px-6 mb-16">
+        <WeatherWidget />
+      </div>
+
+      {/* --- 4. CATEGORY EXPLORER --- */}
+      <div className="container mx-auto px-6 pb-20">
         <div className="flex justify-between items-end mb-8">
           <div>
             <h2 className="text-3xl font-bold text-gray-800">
-              Explore Categories
+              Explore by Category
             </h2>
             <p className="text-gray-500 mt-2">
               Discover Alibag through different types of experiences
@@ -221,10 +227,10 @@ const Home = () => {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
             {categoryCounts.map((category) => (
-              <Link
+              <div
                 key={category.name}
-                to={`/places?category=${category.name}`}
-                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 p-6 text-center group"
+                onClick={() => handleCategoryClick(category.name)}
+                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 p-6 text-center group cursor-pointer"
               >
                 <div className="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-100 transition-colors duration-300 text-blue-600">
                   {getCategoryIcon(category.name)}
@@ -235,7 +241,7 @@ const Home = () => {
                 <p className="text-sm text-gray-500">
                   {category.count} {category.count === 1 ? "place" : "places"}
                 </p>
-              </Link>
+              </div>
             ))}
           </div>
         )}
@@ -251,6 +257,100 @@ const Home = () => {
           </Link>
         </div>
       </div>
+
+      {/* --- 5. NEW & IMPROVED: SHOP SECTION --- */}
+      <section className="relative py-24 overflow-hidden bg-[#0f172a]">
+        {/* Abstract Background Decoration */}
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl opacity-50"></div>
+        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl opacity-50"></div>
+
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="flex flex-col lg:flex-row items-center gap-16">
+            {/* Left Side: Text Content */}
+            <div className="lg:w-1/2 space-y-8 text-center lg:text-left">
+              <div className="inline-flex items-center space-x-2 bg-yellow-500/10 border border-yellow-500/30 rounded-full px-5 py-1.5 text-yellow-400 text-sm font-bold tracking-widest uppercase">
+                <ShoppingBag size={16} />
+                <span>Local & Authentic</span>
+              </div>
+
+              <h2 className="text-5xl font-extrabold text-white leading-tight">
+                Take the{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+                  Flavor of Alibag
+                </span>{" "}
+                Home.
+              </h2>
+
+              <p className="text-lg text-slate-300 leading-relaxed">
+                Support local artisans and farmers. Shop for authentic Konkani
+                spices, handmade wooden artifacts, and fresh cashew nuts
+                delivered straight to your door.
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+                <Link
+                  to="/shop"
+                  className="group flex items-center bg-white text-slate-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-yellow-400 transition-all duration-300 shadow-xl shadow-white/5"
+                >
+                  Visit Shop
+                  <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+                <div className="text-slate-400 text-sm font-medium">
+                  <Gift className="w-5 h-5 inline mr-2 text-yellow-500" />
+                  Perfect for souvenirs & gifts
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side: Product Showcase (Visuals) */}
+            <div className="lg:w-1/2 w-full grid grid-cols-2 gap-6">
+              {/* Card 1 */}
+              <div className="bg-slate-800/40 backdrop-blur-md border border-white/10 p-5 rounded-3xl transform lg:translate-y-8 hover:-translate-y-2 transition-all duration-500 group cursor-pointer shadow-2xl">
+                <div className="relative aspect-square rounded-2xl overflow-hidden mb-4 bg-gray-800">
+                  <img
+                    src="https://m.media-amazon.com/images/I/71K2M7-E7RL.jpg"
+                    className="object-cover w-full h-full opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
+                    alt="Spices"
+                  />
+                  <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1">
+                    <Star
+                      size={12}
+                      className="fill-yellow-400 text-yellow-400"
+                    />{" "}
+                    4.8
+                  </div>
+                </div>
+                <h3 className="text-white font-bold text-xl">Konkan Spices</h3>
+                <div className="flex justify-between items-center mt-2">
+                  <p className="text-slate-400 text-sm">Homemade Masala</p>
+                  <span className="text-yellow-400 font-bold">₹250</span>
+                </div>
+              </div>
+
+              {/* Card 2 */}
+              <div className="bg-slate-800/40 backdrop-blur-md border border-white/10 p-5 rounded-3xl transform lg:-translate-y-8 hover:-translate-y-10 transition-all duration-500 group cursor-pointer shadow-2xl">
+                <div className="relative aspect-square rounded-2xl overflow-hidden mb-4 bg-gray-800">
+                  <img
+                    src="https://placehold.co/400x500/FFA500/ffffff?text=Cashews"
+                    className="object-cover w-full h-full opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
+                    alt="Cashews"
+                  />
+                  <div className="absolute top-3 right-3 bg-yellow-500 text-slate-900 text-xs font-bold px-2 py-1 rounded shadow-md">
+                    Bestseller
+                  </div>
+                </div>
+                <h3 className="text-white font-bold text-xl">
+                  Premium Cashews
+                </h3>
+                <div className="flex justify-between items-center mt-2">
+                  <p className="text-slate-400 text-sm">Fresh Roasted</p>
+                  <span className="text-yellow-400 font-bold">₹450</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

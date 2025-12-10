@@ -12,6 +12,10 @@ import TripPlannerPage from "../pages/TripPlannerPage.jsx";
 import MapPage from "../pages/MapPage.jsx";
 import AllPlaces from "../pages/AllPlaces.jsx";
 import WeatherWidget from "../components/WeatherWidget.jsx";
+import ShopPage from "../pages/ShopPage.jsx";
+import CartPage from "../pages/CartPage.jsx";
+import PaymentSuccess from "../pages/PaymentSuccess.jsx";
+import PaymentCancel from "../pages/PaymentCancel.jsx";
 
 const AppRoutes = () => {
   return (
@@ -23,7 +27,10 @@ const AppRoutes = () => {
       <Route path="/map" element={<MapPage />} />
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/places" element={<AllPlaces />} />
-
+      <Route path="/shop" element={<ShopPage />} />
+      <Route path="/cart" element={<CartPage />} />
+      <Route path="/shop/success" element={<PaymentSuccess />} />
+      <Route path="/shop/cancel" element={<PaymentCancel />} />
       {/* 2. Add New Route */}
       <Route path="/trip-planner" element={<TripPlannerPage />} />
     </Routes>

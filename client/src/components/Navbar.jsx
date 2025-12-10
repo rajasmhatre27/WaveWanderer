@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { useTrip } from "../context/TripContext";
+import { useAuth } from "./../context/AuthContext.jsx";
+import { useTrip } from "./../context/TripContext.jsx";
+// 1. Redux hook import karo Shop Cart ke liye
+import { useSelector } from "react-redux";
 import {
   MapPin,
   ShoppingBag,
+  ShoppingCart, // Product Cart ke liye
+  Briefcase, // Trip Planner ke liye naya icon
   User,
   ChevronDown,
   LogOut,
@@ -13,7 +17,17 @@ import {
 
 const Navbar = () => {
   const { user, token, logout } = useAuth();
+
+  // 2. Trip Context se Trip Count nikalo
   const { tripCount } = useTrip();
+
+  // 3. Redux Store se Product Cart Count nikalo
+  const cartItems = useSelector((state) => state.cart.items);
+  const productCount = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -50,7 +64,7 @@ const Navbar = () => {
       <div className="container mx-auto px-6 py-3">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="flex items-center group">
+          <Link to="/" className="flex items-center group cursor-pointer">
             <div className="relative">
               <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
               <div className="relative bg-gradient-to-br from-blue-600 to-purple-700 p-2 rounded-full shadow-lg">
@@ -62,7 +76,7 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* Navigation Links */}
+          {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
@@ -76,36 +90,72 @@ const Navbar = () => {
               {isActiveRoute("/") && (
                 <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></span>
               )}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full transition-all duration-300 group-hover:w-full"></span>
             </Link>
 
-            {/* Trip Planner with Premium Badge */}
             <Link
-              to="/trip-planner"
-              className="relative font-medium text-gray-700 hover:text-blue-600 transition-all duration-300 group flex items-center"
+              to="/places"
+              className={`relative font-medium transition-all duration-300 group ${
+                isActiveRoute("/places")
+                  ? "text-blue-600"
+                  : "text-gray-700 hover:text-blue-600"
+              }`}
             >
-              <span className="relative">
-                Trip Planner
-                {tripCount > 0 && (
-                  <span className="absolute -top-3 -right-4">
-                    <span className="relative flex h-5 w-5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                      <span className="relative inline-flex items-center justify-center rounded-full h-5 w-5 bg-gradient-to-br from-red-500 to-red-600 text-white text-xs font-bold shadow-lg">
-                        {tripCount}
-                      </span>
-                    </span>
-                  </span>
-                )}
-              </span>
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full transition-all duration-300 group-hover:w-full"></span>
+              Explore
+              {isActiveRoute("/places") && (
+                <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></span>
+              )}
+            </Link>
+
+            {/* Shop Link */}
+            <Link
+              to="/shop"
+              className={`relative font-medium transition-all duration-300 group ${
+                isActiveRoute("/shop")
+                  ? "text-blue-600"
+                  : "text-gray-700 hover:text-blue-600"
+              }`}
+            >
+              Shop
+              {isActiveRoute("/shop") && (
+                <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></span>
+              )}
             </Link>
           </div>
 
-          {/* User Actions */}
-          <div className="flex items-center space-x-4">
+          {/* Right Side: Carts & User Actions */}
+          <div className="flex items-center space-x-6">
+            {/* --- 1. TRIP PLANNER CART (Briefcase Icon) --- */}
+            <Link
+              to="/trip-planner"
+              className="relative p-2 text-gray-600 hover:text-blue-600 transition-colors group"
+              title="Your Trip Itinerary"
+            >
+              <Briefcase className="w-6 h-6" />
+              {tripCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white shadow-sm ring-2 ring-white animate-in zoom-in duration-300">
+                  {tripCount}
+                </span>
+              )}
+            </Link>
+
+            {/* --- 2. PRODUCT SHOP CART (ShoppingCart Icon) --- */}
+            <Link
+              to="/cart"
+              className="relative p-2 text-gray-600 hover:text-green-600 transition-colors group"
+              title="Your Shopping Cart"
+            >
+              <ShoppingCart className="w-6 h-6" />
+              {productCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white shadow-sm ring-2 ring-white animate-in zoom-in duration-300">
+                  {productCount}
+                </span>
+              )}
+            </Link>
+
+            {/* User Dropdown / Login Buttons */}
             {token ? (
               <div className="flex items-center space-x-4">
-                {/* Admin Link */}
+                {/* Admin Link (Only for admins) */}
                 {user && user.role === "admin" && (
                   <Link
                     to="/admin"
@@ -120,12 +170,12 @@ const Navbar = () => {
                 <div className="relative">
                   <button
                     onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                    className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl px-4 py-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-blue-300 group"
+                    className="flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-xl px-2 py-1 md:px-4 md:py-2 shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-300 group"
                   >
                     <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-inner">
                       <User className="h-4 w-4 text-white" />
                     </div>
-                    <span className="font-medium text-gray-700 max-w-32 truncate">
+                    <span className="font-medium text-gray-700 max-w-24 truncate hidden md:block">
                       {user?.name || "User"}
                     </span>
                     <ChevronDown
@@ -161,57 +211,27 @@ const Navbar = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center space-x-3">
+              <div className="hidden md:flex items-center space-x-3">
                 <Link
                   to="/login"
-                  className="px-6 py-2 text-gray-700 font-medium rounded-xl hover:bg-gray-100/80 transition-all duration-300 border border-transparent hover:border-gray-300"
+                  className="px-5 py-2 text-gray-700 font-medium rounded-xl hover:bg-gray-100/80 transition-all duration-300"
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 hover:scale-105"
+                  className="px-5 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 hover:scale-105"
                 >
                   Get Started
                 </Link>
               </div>
             )}
           </div>
+
+          {/* Mobile Menu Button */}
+          {/* (Mobile menu code can remain similar, just ensure cart icon logic is same) */}
         </div>
       </div>
-
-      {/* Mobile menu button (simplified) */}
-      <div className="md:hidden flex justify-center pb-2">
-        <div className="flex items-center space-x-6">
-          <Link
-            to="/"
-            className={`text-sm font-medium ${
-              isActiveRoute("/") ? "text-blue-600" : "text-gray-600"
-            }`}
-          >
-            Home
-          </Link>
-          <Link
-            to="/trip-planner"
-            className="text-sm font-medium text-gray-600 flex items-center"
-          >
-            Trips
-            {tripCount > 0 && (
-              <span className="ml-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {tripCount}
-              </span>
-            )}
-          </Link>
-        </div>
-      </div>
-
-      {/* Backdrop for dropdown */}
-      {isUserDropdownOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsUserDropdownOpen(false)}
-        />
-      )}
     </nav>
   );
 };
