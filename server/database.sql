@@ -61,4 +61,24 @@ CREATE TABLE bookings (
     status VARCHAR(50) DEFAULT 'confirmed'
 );
 
+-- TABLE 6: products (The Shop Items)
+CREATE TABLE products (
+    product_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    image_url VARCHAR(255),
+    stock_quantity INT DEFAULT 100
+);
+
+-- TABLE 7: orders (To track purchases)
+CREATE TABLE orders (
+    order_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(user_id),
+    total_amount DECIMAL(10, 2) NOT NULL,
+    payment_status VARCHAR(50) DEFAULT 'pending', -- 'paid', 'failed'
+    stripe_session_id VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Database tables created successfully!

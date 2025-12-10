@@ -61,3 +61,25 @@ INSERT INTO services (name, description, price)
 VALUES
 ( 'Scooter Rental (Full Day)', 'Rent a scooter for 24 hours to explore Alibag.', 500.00 ),
 ( 'Beachside Camping (1 Night)', 'A 1-night camping package at Nagaon Beach.', 1200.00 );
+
+
+INSERT INTO products (name, description, price, image_url)
+VALUES 
+(
+  'Authentic Alibag Spices (Masala)',
+  'Hand-ground local spices perfect for fish curry. 200g pack.',
+  250.00,
+  'https://m.media-amazon.com/images/I/71K2M7-E7RL.jpg'
+),
+(
+  'Konkan Cashews',
+  'Premium quality, roasted salted cashews from the region.',
+  450.00,
+  'https://www.placehold.co/400x400/FFA500/ffffff?text=Cashews'
+),
+(
+  'Wooden Handicraft Toy',
+  'Traditional handmade wooden toy by local artisans.',
+  150.00,
+  'https://www.placehold.co/400x400/8B4513/ffffff?text=Wooden+Toy'
+);

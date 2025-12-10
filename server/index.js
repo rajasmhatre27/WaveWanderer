@@ -10,6 +10,7 @@ import reviewRoutes from "./routes/reviews.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import favoriteRoutes from "./routes/favoriteRoutes.js";
 import weatherRoutes from "./routes/weather.js"; // Weather route import
+import shopRoutes from "./routes/shopRoutes.js"; // Weather route import
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -53,7 +54,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/favorites", favoriteRoutes);
 app.use("/api/weather", weatherRoutes); // Weather route use
-
+app.use('/api/shop', shopRoutes);
 // Basic health check route
 app.get("/", (req, res) => {
   res.send("WaveWanderer Backend is running!");
